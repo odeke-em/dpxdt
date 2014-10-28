@@ -27,6 +27,7 @@ FLAGS = gflags.FLAGS
 # Local modules
 from dpxdt import runworker
 from dpxdt import server
+from dpxdt.tools import preprocess_argv
 
 
 gflags.DEFINE_bool(
@@ -50,7 +51,7 @@ gflags.DEFINE_string('host', '0.0.0.0', 'Host argument for the server.')
 
 def main(argv):
     try:
-        argv = FLAGS(argv)
+        argv = FLAGS(preprocess_argv.preprocess_argv(__file__, argv))
     except gflags.FlagsError, e:
         print '%s\nUsage: %s ARGS\n%s' % (e, sys.argv[0], FLAGS)
         sys.exit(1)

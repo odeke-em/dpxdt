@@ -30,6 +30,7 @@ from dpxdt.client import fetch_worker
 from dpxdt.client import pdiff_worker
 from dpxdt.client import timer_worker
 from dpxdt.client import workers
+from dpxdt.tools import preprocess_argv
 
 
 def run_workers():
@@ -45,7 +46,7 @@ def run_workers():
 
 def main(argv):
     try:
-        argv = FLAGS(argv)
+        argv = FLAGS(preprocess_argv.preprocess_argv(__file__, argv))
     except gflags.FlagsError, e:
         print '%s\nUsage: %s ARGS\n%s' % (e, sys.argv[0], FLAGS)
         sys.exit(1)

@@ -1,5 +1,6 @@
 .hg
 .svn
+*.sw[op]
 *.o*
 *.dylib
 *.dylib-*

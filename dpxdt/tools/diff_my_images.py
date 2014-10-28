@@ -62,6 +62,7 @@ FLAGS = gflags.FLAGS
 from dpxdt.client import fetch_worker
 from dpxdt.client import release_worker
 from dpxdt.client import workers
+from dpxdt.tools import preprocess_argv
 import flags
 
 
@@ -200,7 +201,7 @@ def real_main(release_url=None,
 
 def main(argv):
     try:
-        argv = FLAGS(argv)
+        argv = FLAGS(preprocess_argv.preprocess_argv(__file__, argv))
     except gflags.FlagsError, e:
         print '%s\nUsage: %s ARGS\n%s' % (e, sys.argv[0], FLAGS)
         sys.exit(1)

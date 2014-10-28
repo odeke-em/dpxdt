@@ -44,6 +44,7 @@ FLAGS = gflags.FLAGS
 from dpxdt.client import release_worker
 from dpxdt.client import fetch_worker
 from dpxdt.client import workers
+from dpxdt.tools import preprocess_argv
 import flags
 
 
@@ -149,17 +150,11 @@ def extract_urls(url, data, unescape=HTMLParser.HTMLParser().unescape):
         # Ignore JavaScript variable assignments
         if 'var' == link['tag'] and '' == link['quote']:
             continue
-
-        try:
-            found_url = unescape(link['absurl'])
-            found_url = clean_url(
-                found_url,
-                force_scheme=parts[0])  # Use the main page's scheme
-        except ValueError as e:
-            logging.warning('Error decoding url: %s. %s: %s', link['absurl'], e.__class__.__name__, e)
-        else:
-            result.add(found_url)
-            
+        found_url = unescape(link['absurl'])
+        found_url = clean_url(
+            found_url,
+            force_scheme=parts[0])  # Use the main page's scheme
+        result.add(found_url)
 
     return result
 
@@ -333,7 +328,7 @@ def real_main(start_url=None,
 
 def main(argv):
     try:
-        argv = FLAGS(argv)
+        argv = FLAGS(preprocess_argv.preprocess_argv(__file__, argv))
     except gflags.FlagsError, e:
         print '%s\nUsage: %s ARGS\n%s' % (e, sys.argv[0], FLAGS)
         sys.exit(1)

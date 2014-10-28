@@ -69,8 +69,9 @@ FLAGS = gflags.FLAGS
 from dpxdt.client import fetch_worker
 from dpxdt.client import release_worker
 from dpxdt.client import workers
-import flags
+from dpxdt.tools import preprocess_argv
 
+import flags
 
 class Test(object):
     """Represents the JSON of a single test."""
@@ -79,9 +80,9 @@ class Test(object):
                  ref_url=None, ref_config=None):
         self.name = name
         self.run_url = run_url
-        self.run_config_data = json.dumps(run_config) if run_config else None
+        self.run_config_data = json.dumps(run_config)
         self.ref_url = ref_url
-        self.ref_config_data = json.dumps(ref_config) if ref_config else None
+        self.ref_config_data = json.dumps(ref_config)
 
 
 def load_tests(data):
@@ -167,7 +168,7 @@ def real_main(release_url=None,
 
 def main(argv):
     try:
-        argv = FLAGS(argv)
+        argv = FLAGS(preprocess_argv.preprocess_argv(__file__, argv))
     except gflags.FlagsError, e:
         print '%s\nUsage: %s ARGS\n%s' % (e, sys.argv[0], FLAGS)
         sys.exit(1)
