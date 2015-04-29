@@ -101,7 +101,7 @@ from dpxdt.server import models
 from dpxdt.server import signals
 from dpxdt.server import work_queue
 from dpxdt.server import utils
-
+from dpxdt.server import case_agnostic_dict
 
 @app.route('/api/create_release', methods=['POST'])
 @auth.build_api_access_required
@@ -297,9 +297,12 @@ def _enqueue_capture(build, release, run, url, config_data, baseline=False):
     """Enqueues a task to run a capture process."""
     # Validate the JSON config parses.
     try:
-        config_dict = json.loads(config_data)
+        json_loaded = json.loads(config_data)
+        config_dict = case_agnostic_dict.CaseAgnosticDict(**json_loaded)
     except Exception, e:
         abort(utils.jsonify_error(e))
+    else:
+        print('json_l', json_loaded, 'cf_d', config_dict)
 
     # Rewrite the config JSON to include the URL specified in this request.
     # Blindly overwrite anything that was there.
